@@ -75,9 +75,11 @@ export const createUser = async (req, res) => {
 
 export const getUserByCnic = async (req, res) => {
   try {
-    const user = await User.findOne({ cnic: req.params.cnic });
+    console.log("Searching for CNIC:", req.params.cnic); // Log the search parameter
+    const users = await User.find({ cnic: req.params.cnic });
+    console.log("Found users:", users); // Log the found users
     
-    if (!user) {
+    if (!users || users.length === 0) {
       return res.status(404).json({ 
         success: false, 
         message: "User not found" 
@@ -86,10 +88,7 @@ export const getUserByCnic = async (req, res) => {
     
     return res.json({ 
       success: true, 
-      user: {
-        id: user._id,
-        ...user.toObject()
-      }
+      users: users
     });
   } catch (error) {
     console.error('Error fetching user:', error);

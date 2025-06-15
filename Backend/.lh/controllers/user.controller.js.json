@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 13,
+            "activePatchIndex": 32,
             "patches": [
                 {
                     "date": 1749960480722,
@@ -60,6 +60,82 @@
                 {
                     "date": 1749969359813,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,8 @@\n import cloudinary from '../config/cloudinary-config.js'\r\n \r\n export const createUser = async (req, res) => {\r\n   try {\r\n-\r\n     if (!req.file) {\r\n       return res.status(400).json({\r\n         success: false,\r\n         message: 'Image is required'\r\n@@ -57,16 +56,8 @@\n \r\n   } catch (error) {\r\n     console.error('Error creating user:', error);\r\n     \r\n-    // Handle duplicate key error (for CNIC)\r\n-    if (error.code === 11000) {\r\n-      return res.status(400).json({\r\n-        success: false,\r\n-        message: 'User with this CNIC already exists'\r\n-      });\r\n-    }\r\n-\r\n     // Handle validation errors\r\n     if (error.name === 'ValidationError') {\r\n       const messages = Object.values(error.errors).map(val => val.message);\r\n       return res.status(400).json({\r\n"
+                },
+                {
+                    "date": 1749971081442,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,28 +74,25 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const user = await User.findOne({ cnic: req.params.cnic });\r\n+    const users = await User.find({ cnic: req.params.cnic });\r\n     \r\n-    if (!user) {\r\n+    if (!users.length) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      user: {\r\n-        id: user._id,\r\n-        ...user.toObject()\r\n-      }\r\n+      users // array of users\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n       success: false, \r\n       message: \"Internal server error\" \r\n\\ No newline at end of file\n     });\r\n   }\r\n-};\n+};\r\n"
+                },
+                {
+                    "date": 1749971142461,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,20 +74,23 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const users = await User.find({ cnic: req.params.cnic });\r\n+    const user = await User.findOne({ cnic: req.params.cnic });\r\n     \r\n-    if (!users.length) {\r\n+    if (!user) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      users // array of users\r\n+      user: {\r\n+        id: user._id,\r\n+        ...user.toObject()\r\n+      }\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n"
+                },
+                {
+                    "date": 1749971149795,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,9 +74,9 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const user = await User.findOne({ cnic: req.params.cnic });\r\n+    const user = await User.findMany({ cnic: req.params.cnic });\r\n     \r\n     if (!user) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n"
+                },
+                {
+                    "date": 1749971188143,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,9 +74,9 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const user = await User.findMany({ cnic: req.params.cnic });\r\n+    const user = await User.find({ cnic: req.params.cnic });\r\n     \r\n     if (!user) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n"
+                },
+                {
+                    "date": 1749971251594,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,26 +74,27 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const user = await User.find({ cnic: req.params.cnic });\r\n+    // Use find() instead of findOne() to get all matching users\r\n+    const users = await User.find({ cnic: req.params.cnic });\r\n     \r\n-    if (!user) {\r\n+    if (!users || users.length === 0) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n-        message: \"User not found\" \r\n+        message: \"No users found with this CNIC\" \r\n       });\r\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      user: {\r\n+      users: users.map(user => ({\r\n         id: user._id,\r\n         ...user.toObject()\r\n-      }\r\n+      }))\r\n     });\r\n   } catch (error) {\r\n-    console.error('Error fetching user:', error);\r\n+    console.error('Error fetching users:', error);\r\n     return res.status(500).json({ \r\n       success: false, \r\n       message: \"Internal server error\" \r\n     });\r\n"
+                },
+                {
+                    "date": 1749971515730,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,27 +74,26 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    // Use find() instead of findOne() to get all matching users\r\n-    const users = await User.find({ cnic: req.params.cnic });\r\n+    const user = await User.findOne({ cnic: req.params.cnic });\r\n     \r\n-    if (!users || users.length === 0) {\r\n+    if (!user) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n-        message: \"No users found with this CNIC\" \r\n+        message: \"User not found\" \r\n       });\r\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      users: users.map(user => ({\r\n+      user: {\r\n         id: user._id,\r\n         ...user.toObject()\r\n-      }))\r\n+      }\r\n     });\r\n   } catch (error) {\r\n-    console.error('Error fetching users:', error);\r\n+    console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n       success: false, \r\n       message: \"Internal server error\" \r\n     });\r\n"
+                },
+                {
+                    "date": 1749971716842,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,9 +74,9 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const user = await User.findOne({ cnic: req.params.cnic });\r\n+    const user = await User.find({ cnic: req.params.cnic });\r\n     \r\n     if (!user) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n"
+                },
+                {
+                    "date": 1749972136954,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,28 +74,25 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const user = await User.find({ cnic: req.params.cnic });\r\n-    \r\n-    if (!user) {\r\n+    const users = await User.find({ cnic: req.params.cnic }); // array milega\r\n+\r\n+    if (users.length === 0) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n     }\r\n-    \r\n+\r\n     return res.json({ \r\n       success: true, \r\n-      user: {\r\n-        id: user._id,\r\n-        ...user.toObject()\r\n-      }\r\n+      users  // array return karna hai, object nahi\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n\\ No newline at end of file\n       success: false, \r\n       message: \"Internal server error\" \r\n     });\r\n   }\r\n-};\n+};\r\n"
+                },
+                {
+                    "date": 1749972411480,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,20 +74,23 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const users = await User.find({ cnic: req.params.cnic }); // array milega\r\n-\r\n-    if (users.length === 0) {\r\n+    const user = await User.find({ cnic: req.params.cnic });\r\n+    \r\n+    if (!user) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n     }\r\n-\r\n+    \r\n     return res.json({ \r\n       success: true, \r\n-      users  // array return karna hai, object nahi\r\n+      user: {\r\n+        id: user._id,\r\n+        ...user.toObject()\r\n+      }\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n"
+                },
+                {
+                    "date": 1749972497217,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,23 +74,23 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const user = await User.find({ cnic: req.params.cnic });\r\n+    const users = await User.find({ cnic: req.params.cnic });\r\n     \r\n-    if (!user) {\r\n+    if (!users || users.length === 0) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      user: {\r\n+      users: users.map(user => ({\r\n         id: user._id,\r\n         ...user.toObject()\r\n-      }\r\n+      }))\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n"
+                },
+                {
+                    "date": 1749984946315,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -77,8 +77,9 @@\n   try {\r\n     const users = await User.find({ cnic: req.params.cnic });\r\n     \r\n     if (!users || users.length === 0) {\r\n+      cons\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n"
+                },
+                {
+                    "date": 1749984955903,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -77,9 +77,9 @@\n   try {\r\n     const users = await User.find({ cnic: req.params.cnic });\r\n     \r\n     if (!users || users.length === 0) {\r\n-      cons\r\n+      console.log(req.pa)\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n"
+                },
+                {
+                    "date": 1749984995770,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -77,9 +77,8 @@\n   try {\r\n     const users = await User.find({ cnic: req.params.cnic });\r\n     \r\n     if (!users || users.length === 0) {\r\n-      console.log(req.pa)\r\n       return res.status(404).json({ \r\n         success: false, \r\n         message: \"User not found\" \r\n       });\r\n"
+                },
+                {
+                    "date": 1749985897295,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,14 +74,17 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    const users = await User.find({ cnic: req.params.cnic });\r\n+    // Remove any dashes or spaces from CNIC\r\n+    const cleanCnic = req.params.cnic.replace(/-/g, '').replace(/\\s/g, '');\r\n     \r\n+    const users = await User.find({ cnic: cleanCnic });\r\n+    \r\n     if (!users || users.length === 0) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n-        message: \"User not found\" \r\n+        message: \"No registrations found for this CNIC\" \r\n       });\r\n     }\r\n     \r\n     return res.json({ \r\n"
+                },
+                {
+                    "date": 1749985904922,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,17 +74,14 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    // Remove any dashes or spaces from CNIC\r\n-    const cleanCnic = req.params.cnic.replace(/-/g, '').replace(/\\s/g, '');\r\n+    const users = await User.find({ cnic: req.params.cnic });\r\n     \r\n-    const users = await User.find({ cnic: cleanCnic });\r\n-    \r\n     if (!users || users.length === 0) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n-        message: \"No registrations found for this CNIC\" \r\n+        message: \"User not found\" \r\n       });\r\n     }\r\n     \r\n     return res.json({ \r\n"
+                },
+                {
+                    "date": 1749986042233,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -85,12 +85,10 @@\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      users: users.map(user => ({\r\n-        id: user._id,\r\n-        ...user.toObject()\r\n-      }))\r\n+      user: users, // Keep it consistent with your frontend expectation\r\n+      users: users // Add this for backward compatibility\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n"
+                },
+                {
+                    "date": 1749986203630,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -85,10 +85,12 @@\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      user: users, // Keep it consistent with your frontend expectation\r\n-      users: users // Add this for backward compatibility\r\n+      users: users.map(user => ({\r\n+        id: user._id,\r\n+        ...user.toObject()\r\n+      }))\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n"
+                },
+                {
+                    "date": 1749986450955,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,9 +74,11 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n+    console.log(\"Searching for CNIC:\", req.params.cnic); // Log the search parameter\r\n     const users = await User.find({ cnic: req.params.cnic });\r\n+    console.log(\"Found users:\", users); // Log the found users\r\n     \r\n     if (!users || users.length === 0) {\r\n       return res.status(404).json({ \r\n         success: false, \r\n@@ -85,12 +87,10 @@\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      users: users.map(user => ({\r\n-        id: user._id,\r\n-        ...user.toObject()\r\n-      }))\r\n+      user: users, // Return all users in both formats\r\n+      users: users\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n     return res.status(500).json({ \r\n"
+                },
+                {
+                    "date": 1749986661393,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -87,9 +87,8 @@\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      user: users, // Return all users in both formats\r\n       users: users\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n"
                 }
             ],
             "date": 1749960480722,

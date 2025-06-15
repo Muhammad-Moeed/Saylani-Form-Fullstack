@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 12,
+            "activePatchIndex": 13,
             "patches": [
                 {
                     "date": 1749960480722,
@@ -56,6 +56,10 @@
                 {
                     "date": 1749967842535,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n import cloudinary from '../config/cloudinary-config.js'\r\n \r\n export const createUser = async (req, res) => {\r\n   try {\r\n+\r\n     if (!req.file) {\r\n       return res.status(400).json({\r\n         success: false,\r\n         message: 'Image is required'\r\n"
+                },
+                {
+                    "date": 1749969359813,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,8 @@\n import cloudinary from '../config/cloudinary-config.js'\r\n \r\n export const createUser = async (req, res) => {\r\n   try {\r\n-\r\n     if (!req.file) {\r\n       return res.status(400).json({\r\n         success: false,\r\n         message: 'Image is required'\r\n@@ -57,16 +56,8 @@\n \r\n   } catch (error) {\r\n     console.error('Error creating user:', error);\r\n     \r\n-    // Handle duplicate key error (for CNIC)\r\n-    if (error.code === 11000) {\r\n-      return res.status(400).json({\r\n-        success: false,\r\n-        message: 'User with this CNIC already exists'\r\n-      });\r\n-    }\r\n-\r\n     // Handle validation errors\r\n     if (error.name === 'ValidationError') {\r\n       const messages = Object.values(error.errors).map(val => val.message);\r\n       return res.status(400).json({\r\n"
                 }
             ],
             "date": 1749960480722,

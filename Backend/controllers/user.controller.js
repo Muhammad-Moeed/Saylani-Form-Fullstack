@@ -57,14 +57,6 @@ export const createUser = async (req, res) => {
   } catch (error) {
     console.error('Error creating user:', error);
     
-    // Handle duplicate key error (for CNIC)
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: 'User with this CNIC already exists'
-      });
-    }
-
     // Handle validation errors
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(val => val.message);

@@ -15,7 +15,6 @@ const Download = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState('');
   const [loadingStates, setLoadingStates] = useState({});
-
   const cardRefs = useRef({});
 
   const handleSubmit = async (e) => {
@@ -26,11 +25,9 @@ const Download = () => {
 
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/${cnic}`);
-      console.log("API Response:", res.data); 
-      
       if (res.data.success) {
         let usersData = [];
-        
+
         if (Array.isArray(res.data.users)) {
           usersData = res.data.users;
         } else if (Array.isArray(res.data.user)) {
@@ -38,36 +35,36 @@ const Download = () => {
         } else if (res.data.user) {
           usersData = [res.data.user];
         }
-        
-        console.log("Processed Users Data:", usersData);
+
         setUsers(usersData);
       } else {
         setError('User not found');
       }
     } catch (err) {
-      console.error('Error fetching users:', err);
       setError('Something went wrong. Please try again.');
     }
   };
 
   const handleDownloadPDF = async (user) => {
-    if (!cardRefs.current[user._id]) return;
-    
+    const cardElement = cardRefs.current[user._id];
+    if (!cardElement) return;
+
     setLoadingStates(prev => ({ ...prev, [user._id]: true }));
 
     try {
-      const canvas = await html2canvas(cardRefs.current[user._id], {
+      const canvas = await html2canvas(cardElement, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
       });
 
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgProps = pdf.getImageProperties(canvas.toDataURL('image/png'));
+      const imgData = canvas.toDataURL('image/png');
+      const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      pdf.addImage(canvas, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save(`Saylani_ID_Card_${user.course.replace(/\s+/g, '_')}.pdf`);
     } catch (err) {
       console.error('PDF generation failed:', err);
@@ -105,19 +102,19 @@ const Download = () => {
               <h4 className="text-center mb-4">
                 <small className="text-muted">Total Courses: {users.length}</small>
               </h4>
-              
+
               <ListGroup>
                 {users.map((user) => (
                   <React.Fragment key={user._id}>
                     <ListGroup.Item className="d-flex justify-content-between align-items-center mb-2">
                       <div className="d-flex align-items-center">
-                        <img 
-                          src={user.imageUrl} 
-                          alt="user" 
+                        <img
+                          src={user.imageUrl}
+                          alt="user"
                           className="rounded-circle me-3"
                           style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                           onError={(e) => {
-                            e.target.onerror = null; 
+                            e.target.onerror = null;
                             e.target.src = 'https://via.placeholder.com/50';
                           }}
                         />
@@ -128,8 +125,8 @@ const Download = () => {
                           </small>
                         </div>
                       </div>
-                      <Button 
-                        variant="success" 
+                      <Button
+                        variant="success"
                         size="sm"
                         onClick={() => handleDownloadPDF(user)}
                         disabled={loadingStates[user._id]}
@@ -138,16 +135,18 @@ const Download = () => {
                       </Button>
                     </ListGroup.Item>
 
-                    <div ref={el => cardRefs.current[user._id] = el} style={{ position: 'absolute', left: '-9999px' }}>
+                    {/* ID Card */}
+                    <div
+                      ref={el => cardRefs.current[user._id] = el}
+                      style={{ position: 'absolute', left: '-9999px', top: 0, zIndex: -1 }}
+                    >
                       <div className="row">
                         <div className="col col-lg-6 col-md-6 col-sm-12">
-                          <div className="col col-lg-11 col-md-11 col-sm-12 text-center h-100 d-flex flex-column justify-content-between" 
-                               style={{ border: '1px solid #7b7b7b' }}>
+                          <div className="col col-lg-11 col-md-11 col-sm-12 text-center h-100 d-flex flex-column justify-content-between" style={{ border: '1px solid #7b7b7b' }}>
                             <img src={cardTop} alt="card-top" className="w-100 mb-1" style={{ height: '50px' }} />
                             <img src={SMIT} alt="SMIT" className="mb-2 mx-auto d-block" style={{ width: '100px', height: '50px' }} />
                             <img src={nameLogo} alt="nameLogo" className="mx-auto d-block mt-2" style={{ width: '150px', height: '50px' }} />
-                            <img src={user.imageUrl} alt="user-image" className="mx-auto d-block rounded-sm mt-2" 
-                                 style={{ width: '80px', height: '80px', border: '3px solid #8bc441' }} />
+                            <img src={user.imageUrl} alt="user-image" className="mx-auto d-block rounded-sm mt-2" style={{ width: '80px', height: '80px', border: '3px solid #8bc441' }} />
                             <h6 className='mt-2'>{user.fullName.toUpperCase()}</h6>
                             <p>{user.course}</p>
                             <img src={cardBot} alt="card-bot" className="w-100" style={{ height: '40px' }} />

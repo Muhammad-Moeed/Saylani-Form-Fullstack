@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 32,
+            "activePatchIndex": 33,
             "patches": [
                 {
                     "date": 1749960480722,
@@ -136,6 +136,10 @@
                 {
                     "date": 1749986661393,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -87,9 +87,8 @@\n     }\r\n     \r\n     return res.json({ \r\n       success: true, \r\n-      user: users, // Return all users in both formats\r\n       users: users\r\n     });\r\n   } catch (error) {\r\n     console.error('Error fetching user:', error);\r\n"
+                },
+                {
+                    "date": 1749987298459,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -74,9 +74,9 @@\n };\r\n \r\n export const getUserByCnic = async (req, res) => {\r\n   try {\r\n-    console.log(\"Searching for CNIC:\", req.params.cnic); // Log the search parameter\r\n+    console.log(\"Searching for CNIC:\", req.params.cnic);\r\n     const users = await User.find({ cnic: req.params.cnic });\r\n     console.log(\"Found users:\", users); // Log the found users\r\n     \r\n     if (!users || users.length === 0) {\r\n"
                 }
             ],
             "date": 1749960480722,

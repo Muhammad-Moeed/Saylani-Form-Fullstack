@@ -75,9 +75,9 @@ export const createUser = async (req, res) => {
 
 export const getUserByCnic = async (req, res) => {
   try {
-    console.log("Searching for CNIC:", req.params.cnic); // Log the search parameter
+    console.log("Searching for CNIC:", req.params.cnic);
     const users = await User.find({ cnic: req.params.cnic });
-    console.log("Found users:", users); // Log the found users
+    console.log("Found users:", users); 
     
     if (!users || users.length === 0) {
       return res.status(404).json({ 

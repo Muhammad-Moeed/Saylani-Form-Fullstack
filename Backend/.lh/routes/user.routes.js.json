@@ -1,0 +1,34 @@
+{
+    "sourceFile": "routes/user.routes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 4,
+            "patches": [
+                {
+                    "date": 1749960494638,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1749961875989,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,8 +3,11 @@\n import upload from '../middlewares/upload.middleware.js';\r\n \r\n const router = express.Router();\r\n \r\n+// Create user with image upload\r\n router.post('/create', upload.single('image'), createUser);\r\n+\r\n+// Get user by CNIC\r\n router.get('/:cnic', getUserByCnic);\r\n \r\n export default router;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1749963434799,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,8 +6,8 @@\n \r\n // Create user with image upload\r\n router.post('/create', upload.single('image'), createUser);\r\n \r\n-// Get user by CNIC\r\n+\r\n router.get('/:cnic', getUserByCnic);\r\n \r\n export default router;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1749963444006,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,11 +3,11 @@\n import upload from '../middlewares/upload.middleware.js';\r\n \r\n const router = express.Router();\r\n \r\n-// Create user with image upload\r\n+// Create user \r\n router.post('/create', upload.single('image'), createUser);\r\n \r\n-\r\n+// Get user by CNIC\r\n router.get('/:cnic', getUserByCnic);\r\n \r\n export default router;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1749963451315,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,7 @@\n const router = express.Router();\r\n \r\n // Create user \r\n router.post('/create', upload.single('image'), createUser);\r\n-\r\n-// Get user by CNIC\r\n router.get('/:cnic', getUserByCnic);\r\n \r\n export default router;\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1749960494638,
+            "name": "Commit-0",
+            "content": "import express from 'express';\r\nimport { createUser, getUserByCnic } from '../controllers/user.controller.js';\r\nimport upload from '../middlewares/upload.middleware.js';\r\n\r\nconst router = express.Router();\r\n\r\nrouter.post('/create', upload.single('image'), createUser);\r\nrouter.get('/:cnic', getUserByCnic);\r\n\r\nexport default router;"
+        }
+    ]
+}

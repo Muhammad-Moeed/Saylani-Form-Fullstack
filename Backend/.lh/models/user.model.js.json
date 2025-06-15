@@ -1,0 +1,26 @@
+{
+    "sourceFile": "models/user.model.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1749960401725,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1749960417321,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,25 @@\n-    \n\\ No newline at end of file\n+import mongoose from 'mongoose';\r\n+\r\n+const userSchema = new mongoose.Schema({\r\n+  country: { type: String, required: true },\r\n+  city: { type: String, required: true },\r\n+  course: { type: String, required: true },\r\n+  proficiency: { type: String, required: true },\r\n+  fullName: { type: String, required: true },\r\n+  fatherName: { type: String, required: true },\r\n+  email: { type: String, required: true },\r\n+  cnic: { type: String, required: true, unique: true },\r\n+  phone: { type: String, required: true },\r\n+  dob: { type: String, required: true },\r\n+  gender: { type: String, required: true },\r\n+  qualification: { type: String, required: true },\r\n+  hasLaptop: { type: String, required: true },\r\n+  fatherNic: { type: String },\r\n+  imageUrl: { type: String, required: true },\r\n+  imagePublicId: { type: String, required: true },\r\n+  createdAt: { type: Date, default: Date.now }\r\n+});\r\n+\r\n+const User = mongoose.model('User', userSchema);\r\n+\r\n+export default User;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1749961739110,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,16 +9,18 @@\n   fatherName: { type: String, required: true },\r\n   email: { type: String, required: true },\r\n   cnic: { type: String, required: true, unique: true },\r\n   phone: { type: String, required: true },\r\n+  fatherCnic: { type: String },\r\n   dob: { type: String, required: true },\r\n   gender: { type: String, required: true },\r\n   qualification: { type: String, required: true },\r\n   hasLaptop: { type: String, required: true },\r\n-  fatherNic: { type: String },\r\n   imageUrl: { type: String, required: true },\r\n   imagePublicId: { type: String, required: true },\r\n   createdAt: { type: Date, default: Date.now }\r\n+}, {\r\n+  timestamps: true\r\n });\r\n \r\n const User = mongoose.model('User', userSchema);\r\n \r\n"
+                }
+            ],
+            "date": 1749960401725,
+            "name": "Commit-0",
+            "content": "    "
+        }
+    ]
+}

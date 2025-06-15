@@ -1,0 +1,38 @@
+{
+    "sourceFile": "server/server.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1749960587912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1749962957266,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import app from './app.js';\r\n+import app from '';\r\n \r\n const PORT = process.env.PORT || 3000;\r\n \r\n app.listen(PORT, () => {\r\n"
+                },
+                {
+                    "date": 1749962967192,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import app from '';\r\n+import app from '../index';\r\n \r\n const PORT = process.env.PORT || 3000;\r\n \r\n app.listen(PORT, () => {\r\n"
+                },
+                {
+                    "date": 1749962987129,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,5 @@\n-import app from '../index';\r\n+import app from '../index.js';\r\n \r\n const PORT = process.env.PORT || 3000;\r\n \r\n app.listen(PORT, () => {\r\n"
+                },
+                {
+                    "date": 1749963379515,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import app from '../index.js';\r\n \r\n-const PORT = process.env.PORT || 3000;\r\n+const PORT = process.env.PORT| 3000;\r\n \r\n app.listen(PORT, () => {\r\n   console.log(`Server running on port ${PORT}`);\r\n });\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1749963385353,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import app from '../index.js';\r\n \r\n-const PORT = process.env.PORT| 3000;\r\n+const PORT = process.env.PORT;\r\n \r\n app.listen(PORT, () => {\r\n   console.log(`Server running on port ${PORT}`);\r\n });\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1749960587912,
+            "name": "Commit-0",
+            "content": "import app from './app.js';\r\n\r\nconst PORT = process.env.PORT || 3000;\r\n\r\napp.listen(PORT, () => {\r\n  console.log(`Server running on port ${PORT}`);\r\n});"
+        }
+    ]
+}

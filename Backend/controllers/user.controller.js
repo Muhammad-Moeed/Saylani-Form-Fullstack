@@ -2,7 +2,7 @@ import User from '../models/user.model.js';
 import cloudinary from '../config/cloudinary-config.js'
 
 export const createUser = async (req, res) => {
-  try {sts
+  try {
     if (!req.file) {
       return res.status(400).json({
         success: false,
